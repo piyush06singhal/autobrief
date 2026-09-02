@@ -1,0 +1,17 @@
+node_modules/
+.env
+
+# Local tooling / editor / OS cruft
+.claude/
+.DS_Store
+
+# Runtime state written into the shared output/ volume (per-deployment, not source)
+output/*.pdf
+output/*.html
+output/run-log.json
+output/settings.json
+output/report-definition.json
+output/audit-log.json
+output/.report.lock
+output/.scheduler-heartbeat
+npm-debug.log*

@@ -1,0 +1,105 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --ink: #12172b;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --accent: #4f46e5;
+    --accent-soft: #eef0fb;
+    --pos: #15803d;
+    --neg: #dc2626;
+    --bg-soft: #f7f8fc;
+}
+
+body {
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #ffffff;
+    padding: 32px 40px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.45;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+}
+
+.header h1 { font-size: 23px; letter-spacing: 0.2px; font-weight: 700; }
+.header .period { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+.summary {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 15px 18px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #2d3348;
+    margin-bottom: 22px;
+    border-radius: 6px;
+}
+
+.notice {
+    background: #fef6e7;
+    border: 1px solid #f6d488;
+    color: #7a5b12;
+    padding: 10px 14px;
+    font-size: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* Grid, not flex: 3–6 AI-generated metrics wrap into tidy rows instead of
+   squishing into one line. auto-fit keeps cards a readable minimum width and
+   fills the row, so 3 cards span the page and 6 cards form two balanced rows. */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-bottom: 26px;
+}
+
+.stat-card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 15px 16px;
+    background: linear-gradient(180deg, #ffffff 0%, var(--bg-soft) 100%);
+    break-inside: avoid;
+}
+
+.stat-card .label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
+.stat-card .value { font-size: 25px; font-weight: 700; margin-bottom: 5px; letter-spacing: -0.4px; }
+.stat-card .delta { font-size: 12px; font-weight: 600; }
+.delta.positive { color: var(--pos); }
+.delta.negative { color: var(--neg); }
+.delta.neutral { color: var(--muted); }
+
+.chart-section { margin-bottom: 24px; break-inside: avoid; }
+.chart-section h2, .table-section h2 {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+.chart-container { height: 220px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.4px; }
+td:not(:first-child), th:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr:nth-child(even) { background: var(--bg-soft); }
+tr:last-child td { border-bottom: none; }
+
+.footer {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: center;
+}

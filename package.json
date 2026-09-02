@@ -1,0 +1,35 @@
+{
+  "name": "automated-pdf-report-generator",
+  "version": "0.1.0",
+  "description": "Autonomous weekly business report: the AI adapts to your Postgres schema and self-validates the metric SQL, then Postgres -> Handlebars -> Puppeteer PDF -> SendGrid, with an LLM-written executive summary (Groq / OpenAI-compatible).",
+  "main": "src/jobs/scheduler.js",
+  "type": "commonjs",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "report:run": "node scripts/run-report.js",
+    "scheduler:start": "node src/jobs/scheduler.js",
+    "admin:start": "node src/admin/server.js",
+    "db:validate": "node scripts/validate-db.js",
+    "benchmark": "node scripts/benchmark.js",
+    "healthcheck": "node scripts/healthcheck.js",
+    "check:email": "node scripts/check-email.js",
+    "test": "node --test",
+    "test:db": "RUN_DB_TESTS=1 node --test",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.4",
+    "chart.js": "^4.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "handlebars": "^4.7.8",
+    "node-cron": "^3.0.3",
+    "pg": "^8.13.1",
+    "puppeteer": "^23.9.0"
+  }
+}

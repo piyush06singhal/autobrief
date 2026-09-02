@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weekly Business Report</title>
+<style>{{{css}}}</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Weekly Business Report</h1>
+    <div class="period">Week ending {{periodLabel}}</div>
+</div>
+
+<div class="summary">{{executiveSummary}}</div>
+
+{{#if notice}}<div class="notice">{{notice}}</div>{{/if}}
+
+<div class="stat-grid">
+    {{#each metrics}}
+    <div class="stat-card">
+        <div class="label">{{this.label}}</div>
+        <div class="value">{{this.displayValue}}</div>
+        {{#if this.hasDelta}}<div class="delta {{this.deltaClass}}">{{this.deltaText}}</div>{{/if}}
+    </div>
+    {{/each}}
+</div>
+
+{{#if trend}}
+<div class="chart-section">
+    <h2>{{trend.title}}</h2>
+    <div class="chart-container">
+        <canvas id="trendChart"></canvas>
+    </div>
+</div>
+
+<div class="table-section">
+    <h2>Daily Breakdown</h2>
+    <table>
+        <thead>
+            <tr>{{#each trend.table.headers}}<th>{{this}}</th>{{/each}}</tr>
+        </thead>
+        <tbody>
+            {{#each trend.table.rows}}
+            <tr>{{#each this}}<td>{{this}}</td>{{/each}}</tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+{{/if}}
+
+<div class="footer">Generated automatically on {{generatedAt}} &middot; Automated Weekly Report</div>
+
+<script>{{{chartJsSource}}}</script>
+<script>
+    const trend = {{#if trend}}{{{json trend}}}{{else}}null{{/if}};
+    if (trend && trend.rows && trend.rows.length) {
+        const ctx = document.getElementById('trendChart').getContext('2d');
+        const isLine = (trend.chartType || 'bar') === 'line';
+        // A vertical gradient gives bars/area a finished look in the PDF.
+        const grad = ctx.createLinearGradient(0, 0, 0, 220);
+        grad.addColorStop(0, isLine ? 'rgba(79,70,229,0.28)' : 'rgba(79,70,229,0.95)');
+        grad.addColorStop(1, isLine ? 'rgba(79,70,229,0.02)' : 'rgba(79,70,229,0.65)');
+        new Chart(ctx, {
+            type: trend.chartType || 'bar',
+            data: {
+                labels: trend.rows.map(r => r.label),
+                datasets: [{
+                    label: trend.chartSeriesLabel,
+                    data: trend.rows.map(r => r[trend.chartSeries]),
+                    backgroundColor: grad,
+                    borderColor: '#4f46e5',
+                    borderWidth: isLine ? 2 : 0,
+                    borderRadius: 5,
+                    fill: isLine,
+                    tension: 0.35,
+                    pointRadius: isLine ? 3 : 0,
+                    pointBackgroundColor: '#4f46e5',
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#eef0f4' }, ticks: { color: '#6b7280', font: { size: 11 } } },
+                    x: { grid: { display: false }, ticks: { color: '#6b7280', font: { size: 11 } } },
+                },
+            },
+        });
+    }
+    window.__chartsReady = true;
+</script>
+
+</body>
+</html>
