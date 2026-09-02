@@ -115,8 +115,16 @@ test('closeBrowserSafely: a close() that throws leads to a SIGKILL', async () =>
 });
 
 test('closeBrowserSafely: a hanging close() is bounded and then killed', async () => {
-    // close() never resolves — the timeout must fire and fall back to a kill.
-    const browser = fakeBrowser(fakePage(), { onClose: () => new Promise(() => {}) });
+    // close() stalls far past the timeout, so the timeout must win the race and
+    // fall back to a kill. Model the stall with a real (ref'd) timer that DOES
+    // eventually resolve — a wedged Chrome still keeps its socket/subprocess
+    // handle on the event loop. A never-resolving `new Promise(() => {})` removes
+    // that handle, and since closeBrowserSafely's own timeout timer is unref'd,
+    // the loop can drain before the 20ms timeout fires — which cancels this test
+    // (and the next) on Node 20's runner. Do NOT simplify this back.
+    const browser = fakeBrowser(fakePage(), {
+        onClose: () => new Promise((resolve) => { setTimeout(resolve, 150); }),
+    });
     await closeBrowserSafely(browser, 20); // tiny timeout so the test is fast
     assert.equal(browser.killedWith, 'SIGKILL');
 });
